@@ -1,8 +1,8 @@
-const getBookings = require('./getBookings.v1');
-const getBooking = require('./getBooking.v1');
-const addBooking = require('./addBooking.v1');
-const updateBooking = require('./updateBooking.v1');
-const deleteBooking = require('./deleteBooking.v1');
+const getBookings = require('./crud/getBookings.v1');
+const getBooking = require('./crud/getBooking.v1');
+const addBooking = require('./crud/addBooking.v1');
+const updateBooking = require('./crud/updateBooking.v1');
+const deleteBooking = require('./crud/deleteBooking.v1');
 
 exports.getBookings = getBookings;
 exports.getBooking = getBooking;

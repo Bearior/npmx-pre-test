@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const supabase = require('../../config/supabase');
+const supabase = require('../../../config/supabase');
 
 // @desc    Register user
 // @route   POST /api/v1/auth/register

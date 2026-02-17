@@ -1,4 +1,4 @@
-const supabase = require('../../config/supabase');
+const supabase = require('../../../config/supabase');
 
 // @desc    Create new campground
 // @route   POST /api/v1/campgrounds

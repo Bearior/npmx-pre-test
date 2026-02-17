@@ -1,4 +1,5 @@
-# **NPMx Pre-test Examination**
+# **NPMx Pre-test Examination **
+**Please Read before cloning this repository**
 # Campground Booking System 
 
 A full-stack campground booking application with Next.js frontend and Express backend.

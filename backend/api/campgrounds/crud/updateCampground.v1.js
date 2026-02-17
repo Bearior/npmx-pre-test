@@ -1,14 +1,15 @@
-const supabase = require('../../config/supabase');
+const supabase = require('../../../config/supabase');
 
-// @desc    Get single campground
-// @route   GET /api/v1/campgrounds/:id
-// @access  Public
+// @desc    Update campground
+// @route   PUT /api/v1/campgrounds/:id
+// @access  Private
 module.exports = async (req, res, next) => {
     try {
         const { data: campground, error } = await supabase
             .from('campgrounds')
-            .select('*')
+            .update(req.body)
             .eq('id', req.params.id)
+            .select()
             .single();
 
         if (error || !campground) {

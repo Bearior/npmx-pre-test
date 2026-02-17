@@ -1,4 +1,4 @@
-const supabase = require('../../config/supabase');
+const supabase = require('../../../config/supabase');
 
 // @desc    Update favorite campground
 // @route   PUT /api/v1/favorites/:id

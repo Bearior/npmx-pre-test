@@ -1,4 +1,4 @@
-const supabase = require('../../config/supabase');
+const supabase = require('../../../config/supabase');
 
 // @desc    Add booking
 // @route   POST /api/v1/bookings

@@ -1,4 +1,4 @@
-const supabase = require('../../config/supabase');
+const supabase = require('../../../config/supabase');
 
 // @desc    Delete campground
 // @route   DELETE /api/v1/campgrounds/:id

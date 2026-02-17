@@ -1,4 +1,4 @@
-const supabase = require('../../config/supabase');
+const supabase = require('../../../config/supabase');
 
 // @desc    Get all bookings
 // @route   GET /api/v1/bookings

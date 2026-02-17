@@ -1,7 +1,7 @@
-const supabase = require('../../config/supabase');
+const supabase = require('../../../config/supabase');
 
-// @desc    Delete booking
-// @route   DELETE /api/v1/bookings/:id
+// @desc    Update booking
+// @route   PUT /api/v1/bookings/:id
 // @access  Private
 module.exports = async (req, res, next) => {
     try {
@@ -20,35 +20,37 @@ module.exports = async (req, res, next) => {
         }
 
         // Check authorization
-        if (booking.user_id !== req.user.id) {
+        if (booking.user_id !== req.user.id && req.user.role !== 'admin') {
             return res.status(401).json({
                 success: false,
-                message: `User ${req.user.id} is not authorized to delete this booking`
+                message: `User ${req.user.id} is not authorized to update this booking`
             });
         }
 
-        const { error } = await supabase
+        const { data: updatedBooking, error } = await supabase
             .from('bookings')
-            .delete()
-            .eq('id', req.params.id);
+            .update(req.body)
+            .eq('id', req.params.id)
+            .select()
+            .single();
 
         if (error) {
             console.log(error);
             return res.status(500).json({
                 success: false,
-                message: "Cannot delete Booking"
+                message: "Cannot update Booking"
             });
         }
 
         res.status(200).json({
             success: true,
-            data: {}
+            data: updatedBooking
         });
     } catch (error) {
         console.log(error);
         return res.status(500).json({
             success: false,
-            message: "Cannot delete Booking"
+            message: "Cannot update Booking"
         });
     }
 };
