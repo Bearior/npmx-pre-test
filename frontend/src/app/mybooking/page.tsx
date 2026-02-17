@@ -1,0 +1,76 @@
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
+import getUserProfile from '@/libs/getUserProfile';
+import BookingActions from '@/components/BookingActions';
+
+export default async function MyBookingPage() {
+  const session = await getServerSession(authOptions);
+  console.log('Session:', session);
+
+  if (!session || !session.user.token) {
+    console.log('No session or token found.');
+    return <div>Please sign in to view your bookings.</div>;
+  }
+  const profile = await getUserProfile(session.user.token);
+
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/bookings`, {
+    headers: {
+      Authorization: `Bearer ${session.user.token}`,
+    },
+    cache: 'no-store', // Ensure fresh data
+  });
+
+  console.log('API Response Status:', response.status);
+
+  if (!response.ok) {
+    console.log('Failed to fetch bookings:', await response.text());
+    return <div>Failed to load bookings.</div>;
+  }
+
+  const data = await response.json();
+  console.log('Fetched Bookings Data:', data);
+
+  const bookings =
+    profile.data.role === 'admin'
+      ? data.data.filter((booking: { user_id: string }) => booking.user_id === profile.data.id) // Admin sees all bookings
+      : data.data; // User sees only their bookings
+
+  console.log('Filtered Bookings:', bookings);
+
+  return (
+    <main className="p-5">
+      <h1 className="text-3xl font-bold mb-5">My Bookings </h1>
+      <p className="text-gray-600 leading-loose">
+        User: {profile.data.name} ({profile.data.email}) <br/>
+          Role: {profile.data.role}
+      </p>
+      {bookings.length === 0 ? (
+        <div>No bookings found.</div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-5">
+          {bookings.map((booking: { members: Number; namelastname:string; id: string; campground: { name?: string; address?: string } | null; booking_date: string; user_id: string }) => (
+            <div
+              key={booking.id}
+              className="border rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-xl font-semibold">
+                {booking.campground?.name || 'Unknown Campground'}
+              </h2>
+              <p className="text-gray-400">
+                {booking.campground?.address || 'Address not available'}
+              </p>
+              <p className="text-gray-700">
+                Booker: {booking.namelastname || 'Unknown'} <br />
+                Number of people: {booking.members?.toString() || 'N/A'}
+              </p>
+              <p className="text-gray-1000">
+                Date: {new Date(booking.booking_date).toLocaleDateString()}
+              </p>
+              <BookingActions bookingId={booking.id} token={session.user.token} />
+            </div>
+          ))}
+        </div>
+      )}
+    </main>
+  );
+}
